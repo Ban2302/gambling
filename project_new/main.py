@@ -14,35 +14,55 @@ symbo_count = {
     "C": 6,
     "D": 8
 }
+symbo_value = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+def check_winnings(colums, lines, bet, values):
+    winnings = 0
+    winning_lines = []
+    for line in range(lines):
+        symbol = colums[0][line]
+        for colum in colums:
+            symbo_check = colum[line]
+            if symbol != symbo_check:
+                break
+        else:
+            winnings += values[symbol] * bet
+            winning_lines.append(line + 1)
+    
+    return winnings, winning_lines
+
 def get_machine_spin(rows, cols, symbols):
     all_symbols = []
-    for symbol, symbo_count in symbols.items():
-        for _ in range (symbo_count):
+    for symbol, symbol_count in symbols.items():
+        for _ in range (symbol_count):
             all_symbols.append(symbol)
 
     colums = []
     for _ in range(cols):
-        colums = []
+        colum = []
         current_symbols = all_symbols[:]
         for _ in range(rows):
             value = random.choice(current_symbols)
             current_symbols.remove(value)
-            colums.append(value)
+            colum.append(value)
         
-        colums.append(colums)
+        colums.append(colum)
          
     return colums
 
 def print_machine(colums):
     for row in range(len(colums[0])):
-        for colum in colums:
-            for i, colum in enumerate(colums):
-                if i != len(colum) -1:
-                    print (colum[row], end= "|")
-                else:
-                    print(colum[row], end="")
+        for i, colum in enumerate(colums):
+            if i != len(colums) - 1:
+                print (colum[row], end= " | ")
+            else:
+                print(colum[row], end="")
             
-            print()
+        print()
 
 
 
@@ -104,5 +124,7 @@ def main():
 
     slots = get_machine_spin(ROWS, COLS, symbo_count)
     print_machine(slots)
+    winnings = check_winnings(slots, lines, bet, symbo_value)
+    print(f"You won ${winnings}.")
    
 main()
